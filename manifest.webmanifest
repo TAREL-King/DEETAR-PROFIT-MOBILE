@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "DEETAR PROFIT Mobile Edition",
+  "short_name": "DEETAR PROFIT",
+  "description": "Private profit and pricing tools for small businesses.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f6f8f5",
+  "theme_color": "#153b2e",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

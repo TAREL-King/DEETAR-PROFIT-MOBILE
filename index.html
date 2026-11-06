@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#153b2e">
+  <meta name="description" content="A private, mobile-first profit and pricing calculator for small businesses.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>DEETAR PROFIT Mobile</title>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-row">
+      <div class="brand-mark" aria-hidden="true">D</div>
+      <div class="brand-copy">
+        <div class="brand-name">DEETAR <span>PROFIT</span></div>
+        <div class="brand-tagline">Know Your Numbers. Grow Your Business.</div>
+      </div>
+      <label class="currency-control" for="currency-select">
+        <span>Currency</span>
+        <select id="currency-select" aria-label="Display currency">
+          <option value="NGN">NGN - Nigerian naira</option>
+          <option value="USD">USD - US dollar</option>
+          <option value="GBP">GBP - British pound</option>
+          <option value="EUR">EUR - euro</option>
+          <option value="GHS">GHS - Ghanaian cedi</option>
+          <option value="CAD">CAD - Canadian dollar</option>
+        </select>
+      </label>
+    </div>
+    <nav class="main-nav" aria-label="Main navigation">
+      <button class="nav-button active" data-view="calculator" aria-current="page"><span>01</span> Calculator</button>
+      <button class="nav-button" data-view="sales"><span>02</span> Sales</button>
+      <button class="nav-button" data-view="dashboard"><span>03</span> Dashboard</button>
+      <button class="nav-button" data-view="guide"><span>04</span> Guide</button>
+    </nav>
+  </header>
+
+  <main class="page-shell">
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+    <section class="view active" id="view-calculator" aria-labelledby="calculator-title">
+      <div class="page-heading">
+        <div><p class="eyebrow">PLAN YOUR PRICE</p><h1 id="calculator-title">Product profit calculator</h1>
+          <p class="subheading">Enter your real costs. See what each sale can contribute to your business.</p></div>
+        <button class="button button-light" id="reset-calculator" type="button">Load sample</button>
+      </div>
+      <div class="calculator-layout">
+        <form id="calculator-form" class="panel input-panel">
+          <div class="panel-heading"><div><h2>Your product and costs</h2><p>Yellow fields are editable and saved on this device.</p></div></div>
+          <div class="field-grid">
+            <label class="field field-wide"><span>Product or service name</span><input name="productName" type="text" maxlength="70" value="Sample product" autocomplete="off"></label>
+            <label class="field"><span>Quantity produced or purchased</span><input name="quantityProduced" type="number" min="0" step="1" inputmode="numeric" value="20"></label>
+            <label class="field"><span>Quantity sold</span><input name="quantitySold" type="number" min="0" step="1" inputmode="numeric" value="20"></label>
+            <label class="field"><span>Unit purchase or production cost</span><input name="unitCost" type="number" min="0" step="0.01" inputmode="decimal" value="12000"></label>
+            <label class="field"><span>Unit selling price before discount</span><input name="sellingPrice" type="number" min="0" step="0.01" inputmode="decimal" value="25000"></label>
+            <label class="field"><span>Packaging cost per unit</span><input name="packaging" type="number" min="0" step="0.01" inputmode="decimal" value="500"></label>
+            <label class="field"><span>Transport or delivery subsidy per unit</span><input name="delivery" type="number" min="0" step="0.01" inputmode="decimal" value="1000"></label>
+            <label class="field"><span>Advertising cost per unit</span><input name="advertising" type="number" min="0" step="0.01" inputmode="decimal" value="750"></label>
+            <label class="field"><span>Other variable cost per unit</span><input name="otherCost" type="number" min="0" step="0.01" inputmode="decimal" value="250"></label>
+            <label class="field"><span>Payment processing fee</span><div class="input-suffix"><input name="feePercent" type="number" min="0" max="99.99" step="0.01" inputmode="decimal" value="2"><b>%</b></div></label>
+            <label class="field"><span>Discount</span><div class="input-suffix"><input name="discountPercent" type="number" min="0" max="99.99" step="0.01" inputmode="decimal" value="5"><b>%</b></div></label>
+            <label class="field"><span>Fixed expenses for this batch</span><input name="fixedExpenses" type="number" min="0" step="0.01" inputmode="decimal" value="5000"></label>
+            <label class="field"><span>Target profit margin</span><div class="input-suffix"><input name="targetMarginPercent" type="number" min="0" max="99.99" step="0.01" inputmode="decimal" value="30"><b>%</b></div><small>After fixed expenses are allocated</small></label>
+          </div>
+          <p class="form-footnote">The payment fee is calculated on the discounted selling price. Batch profit counts product costs for units sold, plus variable expenses and fixed expenses once.</p>
+        </form>
+
+        <section class="panel results-panel" aria-labelledby="results-title" aria-live="polite">
+          <div class="panel-heading"><div><p class="eyebrow">YOUR ESTIMATE</p><h2 id="results-title">Profit snapshot</h2></div><span class="live-chip"><i></i> Live</span></div>
+          <div class="hero-result"><div class="result-label">Estimated batch profit</div><output id="profit-total" class="hero-number">-</output><div id="profit-caption" class="result-caption">After estimated variable and fixed expenses</div></div>
+          <div id="stock-warning" class="inline-warning" hidden></div>
+          <div class="metric-grid">
+            <article class="metric"><span>Net selling price / unit</span><strong id="net-price">-</strong></article>
+            <article class="metric"><span>Contribution / unit</span><strong id="contribution">-</strong></article>
+            <article class="metric"><span>Total net revenue</span><strong id="net-revenue">-</strong></article>
+            <article class="metric"><span>All-in profit margin</span><strong id="profit-margin">-</strong></article>
+            <article class="metric"><span>Product cost for units sold</span><strong id="sold-product-cost">-</strong></article>
+            <article class="metric"><span>Other variable expenses</span><strong id="other-variable-total">-</strong></article>
+            <article class="metric"><span>Total variable expenses</span><strong id="total-variable-expenses">-</strong></article>
+            <article class="metric"><span>Total product cost purchased / produced</span><strong id="produced-product-cost">-</strong></article>
+            <article class="metric"><span>Break-even quantity</span><strong id="break-even-quantity">-</strong></article>
+            <article class="metric"><span>Break-even selling price</span><strong id="break-even-price">-</strong></article>
+          </div>
+          <div class="price-callout"><div><p class="eyebrow">PRICING GUIDE</p><h3>Suggested list price</h3><p>For your target profit margin after fixed expenses are allocated per sold unit.</p></div><strong id="suggested-price">-</strong></div>
+          <details class="calculation-note"><summary>How these results are calculated</summary><p>Net price = list price less discount. Payment fees use the discounted price. Profit = net revenue less product cost for units sold, packaging, delivery support, advertising, other variable expenses, payment fees and batch fixed expenses. Unsold product cost is shown separately and is not counted as a sold-unit expense.</p><p>Break-even price and the suggested list price allocate batch fixed expenses across the quantity sold. Break-even quantity is the number of units needed to cover fixed expenses at the current discounted contribution per unit. The target margin is calculated after this fixed expense allocation.</p></details>
+          <button class="button button-primary button-full" id="save-calculation" type="button">Download this calculation</button>
+        </section>
+      </div>
+    </section>
+
+    <section class="view" id="view-sales" aria-labelledby="sales-title" hidden>
+      <div class="page-heading"><div><p class="eyebrow">KEEP A SIMPLE RECORD</p><h1 id="sales-title">Sales tracker</h1><p class="subheading">Record each sale and see revenue, expenses and profit update automatically.</p></div><button class="button button-light" id="export-csv" type="button">Export CSV</button></div>
+      <div class="sales-layout">
+        <form id="sale-form" class="panel input-panel">
+          <div class="panel-heading"><div><h2 id="sale-form-title">Add a sale</h2><p>Sales and expense figures stay on this device.</p></div></div>
+          <input type="hidden" name="id">
+          <div class="field-grid">
+            <label class="field"><span>Date</span><input name="date" type="date" required></label>
+            <label class="field"><span>Product / service</span><input name="product" type="text" maxlength="70" required></label>
+            <label class="field"><span>Quantity sold</span><input name="quantity" type="number" min="1" step="1" inputmode="numeric" value="1" required></label>
+            <label class="field"><span>Unit selling price</span><input name="unitPrice" type="number" min="0" step="0.01" inputmode="decimal" value="0" required></label>
+            <label class="field"><span>Discount</span><div class="input-suffix"><input name="discountPercent" type="number" min="0" max="99.99" step="0.01" inputmode="decimal" value="0"><b>%</b></div></label>
+            <label class="field"><span>Unit product cost</span><input name="unitCost" type="number" min="0" step="0.01" inputmode="decimal" value="0" required></label>
+            <label class="field"><span>Other variable cost / unit</span><input name="otherCost" type="number" min="0" step="0.01" inputmode="decimal" value="0"></label>
+            <label class="field"><span>Payment fee</span><div class="input-suffix"><input name="feePercent" type="number" min="0" max="99.99" step="0.01" inputmode="decimal" value="0"><b>%</b></div></label>
+            <label class="field field-wide"><span>Fixed expense assigned to this sale</span><input name="fixedExpenses" type="number" min="0" step="0.01" inputmode="decimal" value="0"></label>
+          </div>
+          <div class="form-actions"><button class="button button-primary" type="submit" id="sale-submit">Save sale</button><button class="button button-light" type="button" id="cancel-edit" hidden>Cancel edit</button></div>
+        </form>
+        <section class="panel records-panel"><div class="panel-heading"><div><h2>Your sales</h2><p id="sales-count">No sales saved yet.</p></div><button class="text-button danger" id="clear-sales" type="button" hidden>Clear all</button></div><div id="sales-list" class="sales-list"></div></section>
+      </div>
+    </section>
+
+    <section class="view" id="view-dashboard" aria-labelledby="dashboard-title" hidden>
+      <div class="page-heading"><div><p class="eyebrow">A CLEARER VIEW OF YOUR NUMBERS</p><h1 id="dashboard-title">Business dashboard</h1><p class="subheading">Your totals are based on the sales records saved on this device.</p></div><button class="button button-light" id="download-summary" type="button">Download summary</button></div>
+      <div class="kpi-grid">
+        <article class="kpi-card"><span>Total sales</span><strong id="dash-count">0</strong><small>Recorded transactions</small></article>
+        <article class="kpi-card"><span>Total revenue</span><strong id="dash-revenue">-</strong><small>After discounts</small></article>
+        <article class="kpi-card"><span>Total expenses</span><strong id="dash-expenses">-</strong><small>Entered product, variable and fixed costs</small></article>
+        <article class="kpi-card kpi-highlight"><span>Estimated profit</span><strong id="dash-profit">-</strong><small id="dash-margin">0.00% margin</small></article>
+      </div>
+      <div class="dashboard-grid">
+        <section class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">LAST SIX MONTHS</p><h2>Monthly performance</h2></div></div><div id="chart-wrap" class="chart-wrap"><svg id="monthly-chart" role="img" aria-label="Monthly revenue and profit chart"></svg></div><div class="chart-legend"><span><i class="legend-revenue"></i> Revenue</span><span><i class="legend-profit"></i> Profit</span></div></section>
+        <section class="panel best-panel"><div class="panel-heading"><div><p class="eyebrow">PRODUCT INSIGHT</p><h2>Best-performing product</h2></div></div><div id="best-product" class="best-product"><span class="best-icon" aria-hidden="true">★</span><div><strong>No sales yet</strong><p>Add sales records to see product performance.</p></div></div><h3 class="subsection-title">Monthly totals</h3><div id="monthly-table" class="monthly-table"></div></section>
+      </div>
+    </section>
+
+    <section class="view" id="view-guide" aria-labelledby="guide-title" hidden>
+      <div class="page-heading"><div><p class="eyebrow">A FRIENDLY START</p><h1 id="guide-title">Quick guide</h1><p class="subheading">Simple steps to use DEETAR PROFIT Mobile Edition.</p></div></div>
+      <div class="guide-grid">
+        <article class="panel guide-card"><span class="guide-number">01</span><h2>Price a product</h2><p>Enter your selling price, quantities and per-unit costs in Calculator. The suggested list price uses your target contribution margin before fixed expenses.</p></article>
+        <article class="panel guide-card"><span class="guide-number">02</span><h2>Record a sale</h2><p>In Sales, enter the transaction details. The app calculates discounted revenue, payment fees, expenses and estimated profit. Use Edit or Delete to manage a record.</p></article>
+        <article class="panel guide-card"><span class="guide-number">03</span><h2>Review your business</h2><p>Dashboard summarizes saved sales and compares revenue and profit across the last six calendar months. Best-performing product is ranked by recorded profit.</p></article>
+        <article class="panel guide-card"><span class="guide-number">04</span><h2>Export or move your data</h2><p>Export sales as CSV for a spreadsheet. Download a JSON backup to move your saved data to another browser or device, then use Restore backup.</p></article>
+        <article class="panel guide-card guide-wide"><span class="guide-number">05</span><h2>Your privacy and currency</h2><p>Your calculator inputs and sales records are stored in this browser on this device. They are not uploaded to DEETAR PROFIT. Clearing browser storage can erase them, so keep a backup. Currency selection changes the display label and formatting only. It never converts amounts; do not mix currencies in one set of records.</p></article>
+      </div>
+      <section class="panel data-panel"><div><h2>Backup and restore</h2><p>Download a backup file before changing device or clearing browser data.</p></div><div class="form-actions"><button class="button button-primary" id="backup-json" type="button">Download backup</button><label class="button button-light file-button">Restore backup<input id="restore-json" type="file" accept="application/json,.json" hidden></label></div></section>
+      <p class="owner-line">DEETAR PROFIT is a digital product of Deep Breath Properties &amp; Global Services.</p>
+    </section>
+  </main>
+
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <button class="mobile-nav-button active" data-view="calculator"><span>⌗</span>Price</button>
+    <button class="mobile-nav-button" data-view="sales"><span>＋</span>Sales</button>
+    <button class="mobile-nav-button" data-view="dashboard"><span>▥</span>Dashboard</button>
+    <button class="mobile-nav-button" data-view="guide"><span>?</span>Guide</button>
+  </nav>
+  <footer class="app-footer"><span>Private by design. Saved in this browser.</span><a href="https://payhip.com/b/myhgX" target="_blank" rel="noopener">DEETAR PROFIT on Payhip</a></footer>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
